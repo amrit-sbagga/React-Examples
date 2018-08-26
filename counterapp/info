@@ -1,0 +1,21 @@
+liecycle hooks
+
+1 - Mount
+---------------
+a) constructor
+b) render
+c) componentDidMount : called after component is render into the dom; perfect place to make ajax calls
+               to get dat afrom the server
+
+
+2 - Update
+---------------
+a) render
+b) componentDidUpdate
+
+
+
+3 - Unmount : component is removed from dom e.g deleting counter
+-----------------
+a) componentWillUnmount
+
