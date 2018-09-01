@@ -9,36 +9,36 @@ class App extends Component {
     super(props);
     console.log("This is my initializer");
 
-    const movies = [
-      {
-        id: "1",
-        title: "Avengers: Infinity war",
-        poster_path:
-          "https://image.tmdb.org/t/p/w185_and_h278_bestv2/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
-        content: "this is my first movie content"
-      },
-      {
-        id: "2",
-        title: "Avengers 2",
-        poster_path:
-          "https://image.tmdb.org/t/p/w185_and_h278_bestv2/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
-        content: "this is my second movie content"
-      },
-      {
-        id: "3",
-        title: "Jurassic World: Fallen Kingdom",
-        poster_path:
-          "https://image.tmdb.org/t/p/w185_and_h278_bestv2/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg",
-        content: "this is my third movie content"
-      },
-      {
-        id: "4",
-        title: "Deadpool2",
-        poster_path:
-          "https://image.tmdb.org/t/p/w185_and_h278_bestv2/to0spRl1CMDvyUbOnbb4fTk3VAd.jpg",
-        content: "this is my fourth movie content"
-      }
-    ];
+    // const movies = [
+    //   {
+    //     id: "1",
+    //     title: "Avengers: Infinity war",
+    //     poster_path:
+    //       "https://image.tmdb.org/t/p/w185_and_h278_bestv2/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
+    //     content: "this is my first movie content"
+    //   },
+    //   {
+    //     id: "2",
+    //     title: "Avengers 2",
+    //     poster_path:
+    //       "https://image.tmdb.org/t/p/w185_and_h278_bestv2/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
+    //     content: "this is my second movie content"
+    //   },
+    //   {
+    //     id: "3",
+    //     title: "Jurassic World: Fallen Kingdom",
+    //     poster_path:
+    //       "https://image.tmdb.org/t/p/w185_and_h278_bestv2/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg",
+    //     content: "this is my third movie content"
+    //   },
+    //   {
+    //     id: "4",
+    //     title: "Deadpool2",
+    //     poster_path:
+    //       "https://image.tmdb.org/t/p/w185_and_h278_bestv2/to0spRl1CMDvyUbOnbb4fTk3VAd.jpg",
+    //     content: "this is my fourth movie content"
+    //   }
+    // ];
 
     // <React.Fragment key="111">
     //   <p key="3">This is my row4</p>
@@ -58,12 +58,16 @@ class App extends Component {
     //   //<React.Fragment key="111">{movies}</React.Fragment>
     // }
 
-    this.performSearch();
+    this.state = {};
+
+    this.performSearch("avengers");
   }
 
-  performSearch() {
-    console.log("perform search using movies");
-    const urlString = ""; //to give url
+  performSearch(searchTerm) {
+    console.log("perform search using movies db");
+    const urlString =
+      "https://api.themoviedb.org/3/search/movie?api_key=1b5adf76a72a13bad99b8fc0c68cb085&query=" +
+      searchTerm; //provide correct url
     $.ajax({
       url: urlString,
       success: searchResults => {
@@ -74,8 +78,9 @@ class App extends Component {
         const results = searchResults.results;
         results.forEach(movie => {
           console.log(movie.poster_path);
-
-          const movieRow = <MovieRow movie={movie} />;
+          movie.poster_src =
+            "https://image.tmdb.org/t/p/w185" + movie.poster_path;
+          const movieRow = <MovieRow key={movie.id} movie={movie} />;
           movieRows.push(movieRow);
         });
 
@@ -85,6 +90,13 @@ class App extends Component {
         console.log("error fetching data : ", err);
       }
     });
+  }
+
+  searchChangeHandler(event) {
+    console.log(event.target.value);
+    const boundObject = this;
+    const searchTerm = event.target.value;
+    boundObject.performSearch(searchTerm);
   }
 
   render() {
@@ -103,7 +115,11 @@ class App extends Component {
             </tr>
           </tbody>
         </table>
-        <input placeholder="Enter your search term" className="inputbox" />
+        <input
+          onChange={this.searchChangeHandler.bind(this)}
+          placeholder="Enter your search term"
+          className="inputbox"
+        />
 
         {this.state.rows}
       </div>
